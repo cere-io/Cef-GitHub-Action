@@ -92,6 +92,8 @@ const payload = {
   merged_by: pr.merged_by?.login || null,
   merged_at: pr.merged_at || null,
   base_branch: pr.base?.ref || null,
+  before: ghEvent.before || null,
+  after: ghEvent.after || null,
   timestamp: new Date().toISOString(),
   notion_page_id: notionPageId || null,
   notion_api_key: notionApiKey || null,
