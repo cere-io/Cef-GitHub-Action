@@ -58,6 +58,9 @@ console.log(`  PR #${pr.number}: ${pr.title}`);
 console.log(`  Author:    ${pr.user?.login}`);
 console.log(`  Merged:    ${!!pr.merged}`);
 console.log(`  URL:       ${pr.html_url}`);
+console.log(`  Before:    ${ghEvent.before || '(not set)'}`);
+console.log(`  After:     ${ghEvent.after || '(not set)'}`);
+console.log(`  Head SHA:  ${pr.head?.sha || '(not set)'}`);
 
 // ---- Initialize DDC ClientSdk ----
 
@@ -93,7 +96,7 @@ const payload = {
   merged_at: pr.merged_at || null,
   base_branch: pr.base?.ref || null,
   before: ghEvent.before || null,
-  after: ghEvent.after || null,
+  after: ghEvent.after || pr.head?.sha || null,
   timestamp: new Date().toISOString(),
   notion_page_id: notionPageId || null,
   notion_api_key: notionApiKey || null,
@@ -105,6 +108,7 @@ console.log(`\n=== Sending to CEF ===`);
 console.log(`  Event:       ${eventType}`);
 console.log(`  PR:          #${pr.number} (${ghEvent.action})`);
 console.log(`  Delivery ID: ${payload.delivery_id}`);
+console.log(`  Before/After: ${payload.before || '(null)'} → ${payload.after || '(null)'}`);
 
 try {
   const result = await sdk.event.create(eventType, payload);
